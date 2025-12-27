@@ -1,0 +1,23 @@
+{
+  "name": "TestManagement",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "backend",
+  "runServices": [
+    "backend",
+    "frontend",
+    "db"
+  ],
+  "workspaceFolder": "/workspaces/TestManagement",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.Go",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  }
+}

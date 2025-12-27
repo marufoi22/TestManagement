@@ -1,0 +1,12 @@
+FROM golang:1.22
+
+ARG MIGRATE_VERSION=4.17.1
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -L "https://github.com/golang-migrate/migrate/releases/download/v${MIGRATE_VERSION}/migrate.linux-amd64.tar.gz" \
+      -o /tmp/migrate.tar.gz \
+    && tar -xzf /tmp/migrate.tar.gz -C /tmp \
+    && mv /tmp/migrate.linux-amd64 /usr/local/bin/migrate \
+    && chmod +x /usr/local/bin/migrate \
+    && rm -f /tmp/migrate.tar.gz
