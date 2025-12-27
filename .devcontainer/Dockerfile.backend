@@ -1,12 +1,17 @@
 FROM golang:1.22
 
 ARG MIGRATE_VERSION=4.17.1
+ARG TARGETARCH
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl \
     && rm -rf /var/lib/apt/lists/* \
-    && curl -L "https://github.com/golang-migrate/migrate/releases/download/v${MIGRATE_VERSION}/migrate.linux-amd64.tar.gz" \
+    && ARCH="${TARGETARCH:-amd64}" \
+    && if [ "$ARCH" = "arm64" ]; then ARCH="arm64"; \
+       elif [ "$ARCH" = "amd64" ]; then ARCH="amd64"; \
+       else echo "Unsupported architecture: $ARCH" >&2; exit 1; fi \
+    && curl -L "https://github.com/golang-migrate/migrate/releases/download/v${MIGRATE_VERSION}/migrate.linux-${ARCH}.tar.gz" \
       -o /tmp/migrate.tar.gz \
     && tar -xzf /tmp/migrate.tar.gz -C /tmp \
-    && mv /tmp/migrate.linux-amd64 /usr/local/bin/migrate \
+    && (mv /tmp/migrate.linux-${ARCH} /usr/local/bin/migrate || mv /tmp/migrate /usr/local/bin/migrate) \
     && chmod +x /usr/local/bin/migrate \
     && rm -f /tmp/migrate.tar.gz
